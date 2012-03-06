@@ -1,34 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript" src="http://t.libdd.com/js/libs/jquery/1.6.4/jquery.js"></script>
-
-    <!-- System Parameters -->
-        {#sys:photo.auto_size_limit|value:"500"}
-        {#sys:video.player_width|value:"500"}
-    <!-- System Parameters -->
-    <!-- Custom Parameters -->
-        {#boolean:显示头部图片|value:"true"}
-		{#boolean:显示标签搜索框|value:"true"}
-        {#image:头部图片|value:""}
-        {#color:通栏背景颜色|value:"#111"}
-        {#color:通栏边线颜色|value:"#F33"}
-        {#color:通栏标题颜色|value:"#FFF"}
-        {#color:通栏副标题颜色|value:"#999"}
-        {#text:底部通栏标题文字|value:"The End."}
-		{#number:每页文章数目|value:"10"}
-
-    <!-- Custom Parameters -->
-    <meta charset="UTF-8" />
-
-	{?$_显示标签搜索框}
-    <script type="text/javascript">
-        var ENV = window.ENV || {};
-        ENV.TagName = "{$global.tag_name|js}";
-    </script>
-	<script type="text/javascript" src="http://o.libdd.com/id_8/search.js?v=1"></script>
-    {/$_显示标签搜索框}
-	{?$meta.description}<meta name="description" content="{$meta.description}" />{/$meta.description}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
 	{?view.post}
 		{?$meta.keywords}
 			<meta name="keywords" content="{$meta.keywords}">
@@ -38,8 +14,6 @@
     <link rel="shortcut icon" type="image/jpeg" href="{$meta.favicon}" />
     <link rel="apple-touch-icon" href="{$meta.mobile_icon}" />
     <link rel="alternate" title="订阅{$global.name}" type="application/rss+xml" href="{$meta.rss}" />
-    <link rel="stylesheet" type="text/css" href="http://o.libdd.com/id_8/style.css?v=1104" />
-    <link rel="stylesheet" type="text/css" href="http://t.libdd.com/css/base/rich-content.css?v=0819"/>
     <style rel="stylesheet">
         {?$_通栏背景颜色}#header-container, #footer-container {background-color:{$_通栏背景颜色};}{/$_通栏背景颜色}
         {?$_通栏边线颜色}#header-container, #footer-container {border-color:{$_通栏边线颜色};}{/$_通栏边线颜色}
@@ -48,198 +22,96 @@
     </style>
 </head>
 <body>
-<!-- header begin -->
-<div id="header-container">
-    <ul class="page-menu clearfix">
-        {?pages}
-            {?loop:pages}
-            <li><a href="{$page.url}">{$page.title}</a></li>
-            {/loop:pages}
-        {/pages}
-        <!--投稿-->
-        {?contribute}<li><a href="{$contribute.url}" rel="nofollow">{$contribute.title}</a></li>{/contribute}
-        <!--私信-->
-        {?inbox}<li><a href="{$inbox.url}" rel="nofollow">{$inbox.title}</a></li>{/inbox}
-        <li><a class="categories" href="{$global.archive_url}">存档</a></li>
-        <!--li class="social-links"><a href="#RSS_LINK">RSS</a></li-->
-		{?$_显示标签搜索框}
-		<li style="margin-left:10px;">
-			<div class="tag-search">
-				<form id="tag-form" action="/tag" method="get">
-					<div class="search-text-wrapper">
-						<input type="hidden" name="search" value="1"/>
-						<input id="search-text" autocomplete="off" name="tag" class="search-text" type="text" value=""/>
-						<label id="search-tip">搜索</label>
-						<input id="search-btn" class="search-button" type="button" value="搜索">
-					</div>
-				</form>
-			</div>
-		</li>
-		{/$_显示标签搜索框}
-    </ul>
-    <div id="header" class="clearfix">
-        {?$_显示头部图片}
-        {?$_头部图片}
-        <div class="header-image"><a href="/"><img src="{$_头部图片}" /></a></div>
-        {/$_头部图片}
-        {?!$_头部图片}
-        <div class="header-image"><a href="/"><img src="http://o.libdd.com/id_8/img/logo.png" /></a></div>
-        {/!$_头部图片}
-        {/$_显示头部图片}
-        <h1 class="logo"><a href="/">{$global.name}</a></h1>
-        <p>{$global.description}</p>
-    </div>
-</div>
-<!-- header end -->
 
-
-<!-- body begin -->
-<div id="container" class="clearfix">
-    <ul id="post-column">
-        <!-- 文章列表循环 开始 -->
-        {?loop:posts}
-        <li class="post-container clearfix" id="post-{$post.id}">
-            <div class="post clearfix post-{$post.type}">
-                <!-- 图标-->
-                <a href="{$post.url}" class="post-type" id="post-type-{$post.id}">
-                    {$post.type_name}
-                </a>
-                <!-- 照片 -->
-                {?post.photo}
-                    <div class="image-items">
-                    	<!--循环图片-->
-                        {?loop:photos}
-                            <div class="img-container">
-                                <a target="_blank" href="{$photo.1280.src}">
-                                    <img src="{$photo.500.src}" class="mediabox-bg" width="{$photo.auto_size.width}" height="{$photo.auto_size.height}" alt="loading..." />
-                                </a>
-								<!--多张图片-->
-                                {?photos.multi}
-								<!--当前图片描述-->
-                                <p>{$photo.description}</p>
-                                {/photos.multi}
-                            </div>
-                        {/loop:photos}
-                    </div>
-                {/post.photo}
-                <!-- 视频 -->
-                {?post.video}
-                <div class="video-item mediabox-bg">
-                    {$video.player}
-                </div>
-                {/post.video}
-                <!-- 音乐播放器 -->
-                {?post.audio}
-                <div class="music-player">
-                    <p><img src="{$audio.cover}" width="257" /></p>
-                    <p>{$audio.player}</p>
-                </div>
-                {/post.audio}
-                <!-- 时间 -->
-                <h4 class="date">{$post.date|date_format:"day_of_month"} {$post.date|date_format:"month_en"}, {$post.date|date_format:"year"}</h4>
-                <!-- 文字 -->
-                {?post.text}
-                    {?$text.title}
-                    <h3 class="title{?!$text.content} no-underline{/!$text.content}"><a href="{$post.url}">{$text.title}</a></h3>
-                    {/$text.title}
-                {/post.text}
-                <!-- 链接 -->
-                {?post.link}
-                    <h3 class="title{?!$link.description} no-underline{/!$link.description}"><a class="post-link" href="{$link.url}" >
-                        <!--如果有标题，显示标题，否则，显示网址-->
-						{?$link.title}{$link.title}{/$link.title}
-                        {?!$link.title}{$link.url|truncate:"20":"..."}{/!$link.title}
-                    </a></h3>
-                {/post.link}
-                <!-- 正文 或 描述 -->
-                <div class="copy">
-                	<!--文字类型-->
-                    {?post.text}<div class="rich-content">{$text.content}</div>{/post.text}
-                    <!--图片类型-->
-                    {?post.photo}
-						<!--图片标题-->
-                    	{?$photos.title}
-                            <h5 class="photos-title">{$photos.title}</h5>
-                        {/$photos.title}
-                        <!--所有图片的描述-->
-                        {?$photos.description}
-                        	<div class="photos-desc rich-content">{$photos.description}</div>
-                        {/$photos.description}
-                    {/post.photo}
-                    <!--音频类型-->
-                    {?post.audio}<div class="rich-content">{$audio.description}</div>{/post.audio}
-                    <!--视频类型-->
-					{?post.video}<div class="rich-content">{$video.description}</div>{/post.video}
-                    <!--链接类型-->
-					{?post.link}<div class="rich-content">{$link.description}</div>{/post.link}
-                </div>
-            </div>
-            <div class="meta clearfix">
-            	<!--标签-->
-                {?post.tag}
-                <div class="tag-list">
-                    {?loop:post.tags}
-                    <a href="{$post.tag.url}" target="_blank">{$post.tag.name}</a>
-                    {/loop:post.tags}
-                </div>
-                {/post.tag}
-                <div class="alt-meta">
-                    {?posts@top}<span>[置顶]</span>{/posts@top}
-                    {?post.notes}<a href="{$post.url}#notes" class="note-count">{$post.notes_count} 热度</a>{/post.notes}
-                    {?post.reblog}
-                    <a target="_blank" href="{$post.reblog.blog_url}" class="reblog-from">转载自 {$post.reblog.blog_name}</a>
-                    {/post.reblog}
-                    {?view.list}
-                    <a href="{$post.url}" class="post-permanent-link">全文</a>
-                    {/view.list}
-                </div>
-            </div>
-        </li>
-		<!--文章终端页-->
-        {?view.post}
-        <li id="notes" class="post-container clearfix">
-            {#sys:notes.text_color|value:"#000"}
-            {#sys:notes.link_color|value:"#000"}
-            {#sys:notes.blockquote_color|value:"#CCC"}
-            {#sys:notes.block_bg_color|value:"#EAEAEA"}
-            {#sys:notes.block_border_color|value:"#DDD"}
-            {#sys:notes.operation_link_color|value:"#666"}
-            {#sys:notes.enable_border_radius|value:"true"}
-            {#sys:notes.width|value:"700"}
-            {$post.notes}
-        </li>
-        {/view.post}
-        {/loop:posts}
-        <!-- 文章列表循环 结束 -->
-    </ul>
+<div data-role="header">
+  <h1><?global.name></h1>
 </div>
-<!-- body end -->
-<!-- footer begin -->
-<div id="footer-container">
-    <div id="footer">
-        <div class="next-prev clearfix">
-        	<!--文章列表页，显示分页-->
+
+<div id="container">
+  <ul id="post-column">
+    <!-- 文章列表循环 开始 -->
+    {?loop:posts}
+    <li class="post-container clearfix" id="post-{$post.id}">
+      <div class="post clearfix post-{$post.type}">
+        <!-- 图标-->
+        <a href="{$post.url}" class="post-type" id="post-type-{$post.id}">
+            {$post.type_name}
+        </a>
+        <!-- 时间 -->
+        <h4 class="date">{$post.date|date_format:"day_of_month"} {$post.date|date_format:"month_en"}, {$post.date|date_format:"year"}</h4>
+        <!-- 文字 -->
+        {?post.text}
+            {?$text.title}
+            <h3 class="title{?!$text.content} no-underline{/!$text.content}"><a href="{$post.url}">{$text.title}</a></h3>
+            {/$text.title}
+        {/post.text}
+        <!-- 正文 或 描述 -->
+        <div class="copy">
+        	<!--文字类型-->
+            {?post.text}<div class="rich-content">{$text.content}</div>{/post.text}
+         </div>
+      </div>
+      <div class="meta clearfix">
+      	<!--标签-->
+          {?post.tag}
+          <div class="tag-list">
+            {?loop:post.tags}
+            <a href="{$post.tag.url}" target="_blank">{$post.tag.name}</a>
+            {/loop:post.tags}
+          </div>
+          {/post.tag}
+          <div class="alt-meta">
+            {?posts@top}<span>[置顶]</span>{/posts@top}
+            {?post.notes}<a href="{$post.url}#notes" class="note-count">{$post.notes_count} 热度</a>{/post.notes}
+            {?post.reblog}
+            <a target="_blank" href="{$post.reblog.blog_url}" class="reblog-from">转载自 {$post.reblog.blog_name}</a>
+            {/post.reblog}
             {?view.list}
-            {?pagination}
-                <div>
-                    {?pagination.prev}<a href="{$pagination.prev.url}" class="prev-page">上一页</a>{/pagination.prev}
-                    {?pagination.next}<a href="{$pagination.next.url}" class="next-page">下一页</a>{/pagination.next}
-                </div>
-            {/pagination}
+            <a href="{$post.url}" class="post-permanent-link">全文</a>
             {/view.list}
-            <!--文章内容页，显示分页-->
-            {?view.post}
-            {?pagination}
-                <div>
-                    {?pagination.prev}<a href="{$pagination.prev.url}" class="prev-page">上一篇</a>{/pagination.prev}
-                    {?pagination.next}<a href="{$pagination.next.url}" class="next-page">下一篇</a>{/pagination.next}
-                </div>
-            {/pagination}
-            {/view.post}
-        </div>
-        {?$_底部通栏标题文字}<h5>{$_底部通栏标题文字}</h5>{/$_底部通栏标题文字}
-    </div>
+          </div>
+      </div>
+    </li>
+<!--文章终端页-->
+    {?view.post}
+    <li id="notes" class="post-container clearfix">
+        {#sys:notes.text_color|value:"#000"}
+        {#sys:notes.link_color|value:"#000"}
+        {#sys:notes.blockquote_color|value:"#CCC"}
+        {#sys:notes.block_bg_color|value:"#EAEAEA"}
+        {#sys:notes.block_border_color|value:"#DDD"}
+        {#sys:notes.operation_link_color|value:"#666"}
+        {#sys:notes.enable_border_radius|value:"true"}
+        {#sys:notes.width|value:"700"}
+        {$post.notes}
+    </li>
+    {/view.post}
+    {/loop:posts}
+    <!-- 文章列表循环 结束 -->
+  </ul>
 </div>
-<!-- footer end -->
+
+<div id="footer">
+  {?view.post}
+  {?pagination}
+      <div>
+          {?pagination.prev}<a href="{$pagination.prev.url}" class="prev-page">上一篇</a>{/pagination.prev}
+          {?pagination.next}<a href="{$pagination.next.url}" class="next-page">下一篇</a>{/pagination.next}
+      </div>
+  {/pagination}
+  {/view.post}
+</div>
+
+<div data-role="footer" data-position="fixed">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#" id="tabA" data-icon="custom">分享</a></li>
+			<li><a href="#" id="tabB" data-icon="custom" class="ui-btn-active">转载</a></li>
+			<li><a href="#" id="tabC" data-icon="custom">关注</a></li>
+			<li><a href="#" id="tabD" data-icon="custom">主页</a></li>
+    </ul>
+  </div>
+</div>
+
 </body>
 </html>
