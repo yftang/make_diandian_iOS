@@ -2,115 +2,174 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+	<link rel="stylesheet" href="http://taitems.github.com/iOS-Inspired-jQuery-Mobile-Theme/ios_inspired/styles.css" />
 	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
-	{?view.post}
-		{?$meta.keywords}
-			<meta name="keywords" content="{$meta.keywords}">
-		{/$meta.keywords}
-	{/view.post}
-    <title>{$meta.title}</title>
-    <link rel="shortcut icon" type="image/jpeg" href="{$meta.favicon}" />
-    <link rel="apple-touch-icon" href="{$meta.mobile_icon}" />
-    <link rel="alternate" title="订阅{$global.name}" type="application/rss+xml" href="{$meta.rss}" />
-    <style rel="stylesheet">
-        {?$_通栏背景颜色}#header-container, #footer-container {background-color:{$_通栏背景颜色};}{/$_通栏背景颜色}
-        {?$_通栏边线颜色}#header-container, #footer-container {border-color:{$_通栏边线颜色};}{/$_通栏边线颜色}
-        {?$_通栏标题颜色}.logo a, #footer h5 {color:{$_通栏标题颜色};}{/$_通栏标题颜色}
-        {?$_通栏副标题颜色}#header p {color:{$_通栏副标题颜色};}{/$_通栏副标题颜色}
-    </style>
+	<script type="text/javascript">
+	  var click_to_share = function (event) {
+	    var forward_to = event.target.getAttribute("id");
+	    var post_id = $("#content-body").attr("class");
+	    if (post_id !== "cancel") {
+  	    window.open('http://www.diandian.com/share/goto/' + forward_to + '/' + post_id);
+  	  }
+		  $("[data-role='dialog']").dialog("close");
+	  };
+	  //绑定按钮点击事件
+	  $(".ui-dialog button").live("click", click_to_share);
+	</script>
+	<style>
+	  #content-tail {
+	    width: 80%;
+	    text-align: left;
+	  }
+	  #footer {
+	    text-align: center;
+	  }
+	  ul {
+	    list-style-type: none;
+	  }
+	</style>
+
+  <title>{$meta.title}</title>
+  <style rel="stylesheet">
+      {?$_通栏背景颜色}#header-container, #footer-container {background-color:{$_通栏背景颜色};}{/$_通栏背景颜色}
+      {?$_通栏边线颜色}#header-container, #footer-container {border-color:{$_通栏边线颜色};}{/$_通栏边线颜色}
+      {?$_通栏标题颜色}.logo a, #footer h5 {color:{$_通栏标题颜色};}{/$_通栏标题颜色}
+      {?$_通栏副标题颜色}#header p {color:{$_通栏副标题颜色};}{/$_通栏副标题颜色}
+  </style>
 </head>
+
 <body>
 
-<div data-role="header">
-  <h1><?global.name></h1>
-</div>
+<!-- 文章浏览页面，暂时的主界面 -->
+<div data-role="page">
+  <!-- 博客头部信息 -->
+  <div data-role="header">
+    <a href="{$global.url}">
+      {$global.name}
+    </a>
+  </div>
 
-<div id="container">
-  <ul id="post-column">
-    <!-- 文章列表循环 开始 -->
-    {?loop:posts}
-    <li class="post-container clearfix" id="post-{$post.id}">
-      <div class="post clearfix post-{$post.type}">
-        <!-- 图标-->
-        <a href="{$post.url}" class="post-type" id="post-type-{$post.id}">
-            {$post.type_name}
-        </a>
-        <!-- 时间 -->
-        <h4 class="date">{$post.date|date_format:"day_of_month"} {$post.date|date_format:"month_en"}, {$post.date|date_format:"year"}</h4>
-        <!-- 文字 -->
-        {?post.text}
+  <!-- 文章内容部分 -->
+  <div data-role="content">
+    <div id="header">
+    <ul>
+      <!-- 文章列表循环 开始 -->
+      {?loop:posts}
+      <li>
+        <!-- 文章浏览页面的头部信息，LOGO， 标题等 -->
+        <div id="content-head">
+          <a href="{$author.url}" target="_blank">
+            <img src="{$author.avatar_64}" title="{$author.name}" />
+          </a>
+
+          <!-- 如果是文字类型 -->
+          {?post.text}
             {?$text.title}
-            <h3 class="title{?!$text.content} no-underline{/!$text.content}"><a href="{$post.url}">{$text.title}</a></h3>
+              <h3 id="content-title">
+                <a href="{$post.url}">{$text.title}</a>
+              </h3>
             {/$text.title}
-        {/post.text}
-        <!-- 正文 或 描述 -->
-        <div class="copy">
-        	<!--文字类型-->
-            {?post.text}<div class="rich-content">{$text.content}</div>{/post.text}
-         </div>
-      </div>
-      <div class="meta clearfix">
-      	<!--标签-->
+          {/post.text}
+
+          <h4 id="content-date">
+            {$post.date|date_format:"day_of_month"} {$post.date|date_format:"month_en"}, {$post.date|date_format:"year"}
+          </h4>
+        </div>
+
+        <!-- 文章显示页面的标签、转载自等 -->
+        <div id="content-neck">
+        	<!--标签-->
           {?post.tag}
-          <div class="tag-list">
+          <div id="tags" class="tags">
             {?loop:post.tags}
             <a href="{$post.tag.url}" target="_blank">{$post.tag.name}</a>
             {/loop:post.tags}
           </div>
           {/post.tag}
-          <div class="alt-meta">
+
+          <!-- 置顶、转载等信息 -->
+          <div id="alts" class="alts">
             {?posts@top}<span>[置顶]</span>{/posts@top}
-            {?post.notes}<a href="{$post.url}#notes" class="note-count">{$post.notes_count} 热度</a>{/post.notes}
             {?post.reblog}
             <a target="_blank" href="{$post.reblog.blog_url}" class="reblog-from">转载自 {$post.reblog.blog_name}</a>
             {/post.reblog}
             {?view.list}
-            <a href="{$post.url}" class="post-permanent-link">全文</a>
+            <a href="{$post.url}" class="content-below-link">全文</a>
             {/view.list}
           </div>
-      </div>
-    </li>
-<!--文章终端页-->
-    {?view.post}
-    <li id="notes" class="post-container clearfix">
-        {#sys:notes.text_color|value:"#000"}
-        {#sys:notes.link_color|value:"#000"}
-        {#sys:notes.blockquote_color|value:"#CCC"}
-        {#sys:notes.block_bg_color|value:"#EAEAEA"}
-        {#sys:notes.block_border_color|value:"#DDD"}
-        {#sys:notes.operation_link_color|value:"#666"}
-        {#sys:notes.enable_border_radius|value:"true"}
-        {#sys:notes.width|value:"700"}
-        {$post.notes}
-    </li>
-    {/view.post}
-    {/loop:posts}
-    <!-- 文章列表循环 结束 -->
-  </ul>
-</div>
+        </div>
 
-<div id="footer">
-  {?view.post}
-  {?pagination}
-      <div>
-          {?pagination.prev}<a href="{$pagination.prev.url}" class="prev-page">上一篇</a>{/pagination.prev}
-          {?pagination.next}<a href="{$pagination.next.url}" class="next-page">下一篇</a>{/pagination.next}
-      </div>
-  {/pagination}
-  {/view.post}
-</div>
+        <!-- 文章浏览页面的正文 -->
+        <div id="content-body" class="{$post.id}">
+        	<!--如果是文字类型-->
+            {?post.text}<div class="rich-content">{$text.content}</div>{/post.text}
+        </div>
 
-<div data-role="footer" data-position="fixed">
-  <div data-role="navbar">
-    <ul>
-      <li><a href="#" id="tabA" data-icon="custom">分享</a></li>
-			<li><a href="#" id="tabB" data-icon="custom" class="ui-btn-active">转载</a></li>
-			<li><a href="#" id="tabC" data-icon="custom">关注</a></li>
-			<li><a href="#" id="tabD" data-icon="custom">主页</a></li>
+        <div id="content-tail">
+          <ul>
+            {?view.post}
+            <li>
+              {#sys:notes.text_color|value:"#000"}
+              {#sys:notes.link_color|value:"#000"}
+              {#sys:notes.blockquote_color|value:"#CCC"}
+              {#sys:notes.block_bg_color|value:"#EAEAEA"}
+              {#sys:notes.block_border_color|value:"#DDD"}
+              {#sys:notes.operation_link_color|value:"#666"}
+              {#sys:notes.enable_border_radius|value:"true"}
+              {#sys:notes.width|value:"650"}
+              {$post.notes}
+            </li>
+            {/view.post}
+          </ul>
+        </div>
+      </li>
+      {/loop:posts}
     </ul>
+    </div>
+
+    <!-- 文章浏览页面的页面选择部分 -->
+    <div id="footer">
+      {?view.post}
+      {?pagination}
+        <div>
+          {?pagination.prev}
+            <a href="{$pagination.prev.url}" class="prev-page">上一篇</a> |
+          {/pagination.prev}
+          {?pagination.next}
+            <a href="{$pagination.next.url}" class="next-page">下一篇</a>
+          {/pagination.next}
+        </div>
+      {/pagination}
+      {/view.post}
+    </div>
   </div>
+
+  <div data-role="footer" data-position="fixed">
+    {?view.post}
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#fowardOptions" data-icon="plus" data-rel="dialog" data-transition="slideup" class="ui-btn-active">分享</a></li>
+		    <li><a href="#" data-icon="minus">删除</a></li>
+		    <li><a href="#" data-icon="star">关注</a></li>
+		    <li><a href="#" data-icon="home">主页</a></li>
+      </ul>
+    </div>
+    {/view.post}
+  </div>
+</div>
+
+<!-- 文章转载页面 -->
+<div data-role="page" id="fowardOptions">
+	<div data-role="content">
+  	<button id="sina_weibo" data-theme="a">分享到新浪微博</button>
+  	<button id="tencent_weibo" data-theme="a">分享到腾讯微博</button>
+  	<button id="renren" data-theme="a">分享到人人网</button>
+  	<button id="douban" data-theme="a">分享到豆瓣</button>
+  	<button id="cancel" data-theme="b">取消</button>
+	</div>
 </div>
 
 </body>
