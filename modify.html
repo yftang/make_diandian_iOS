@@ -11,7 +11,7 @@
 	  var click_to_share = function (event) {
 	    var forward_to = event.target.getAttribute("id");
 	    var post_id = $("#content-body").attr("class");
-	    if (post_id !== "cancel") {
+	    if (forward_to != "cancel") {
   	    window.open('http://www.diandian.com/share/goto/' + forward_to + '/' + post_id);
   	  }
 		  $("[data-role='dialog']").dialog("close");
@@ -20,15 +20,33 @@
 	  $(".ui-dialog button").live("click", click_to_share);
 	</script>
 	<style>
+	  #content-logo {
+	    border: 1px solid black;
+	  }
+	  #content-title {
+	    text-align: center;
+	  }
+	  #content-date {
+	    color: #808080;
+	    text-align: center;
+	  }
 	  #content-tail {
 	    width: 80%;
-	    text-align: left;
+	  }
+	  #tag {
+	    padding: 0px 5px 0px 5px;
 	  }
 	  #footer {
 	    text-align: center;
 	  }
 	  ul {
 	    list-style-type: none;
+	  }
+	  a {
+	    text-decoration: none;
+	  }
+	  p {
+	    text-indent: 2em;
 	  }
 	</style>
 
@@ -46,8 +64,8 @@
 <!-- 文章浏览页面，暂时的主界面 -->
 <div data-role="page">
   <!-- 博客头部信息 -->
-  <div data-role="header">
-    <a href="{$global.url}">
+  <div data-role="header" class="ui-bar-header" role="banner">
+    <a href="{$global.url}" cdata-icon="home">
       {$global.name}
     </a>
   </div>
@@ -60,32 +78,50 @@
       {?loop:posts}
       <li>
         <!-- 文章浏览页面的头部信息，LOGO， 标题等 -->
-        <div id="content-head">
-          <a href="{$author.url}" target="_blank">
-            <img src="{$author.avatar_64}" title="{$author.name}" />
-          </a>
+        <table id="content-head" width="100%">
+          <tr>
+            <td width="10%">
+            <a href="{$author.url}" target="_blank">
+              <img src="{$author.avatar_64}" title="{$author.name}" id="content-logo" />
+            </a>
+            </td>
 
-          <!-- 如果是文字类型 -->
-          {?post.text}
-            {?$text.title}
-              <h3 id="content-title">
-                <a href="{$post.url}">{$text.title}</a>
-              </h3>
-            {/$text.title}
-          {/post.text}
+            <td width="5%"></td>
 
-          <h4 id="content-date">
-            {$post.date|date_format:"day_of_month"} {$post.date|date_format:"month_en"}, {$post.date|date_format:"year"}
-          </h4>
-        </div>
+            <!-- 如果是文字类型 -->
+            {?post.text}
+              {?$text.title}
+                <td width="50%">
+                <h3 id="content-title">
+                  <a href="{$post.url}">{$text.title}</a>
+                </h3>
+                <h4 id="content-date">
+                  发表于
+                  {$post.date|date_format:"year"} 年
+                  {$post.date|date_format:"month"}
+                  {$post.date|date_format:"day_of_month"} 日
+                </h4>
+                </td>
+              {/$text.title}
+            {/post.text}
+
+            <td width="5%"></td>
+
+            <td width="30%" id="content-search">
+            </td>
+          </tr>
+        </table>
 
         <!-- 文章显示页面的标签、转载自等 -->
         <div id="content-neck">
         	<!--标签-->
           {?post.tag}
-          <div id="tags" class="tags">
+          <div>
+            标签：
             {?loop:post.tags}
-            <a href="{$post.tag.url}" target="_blank">{$post.tag.name}</a>
+            <a href="{$post.tag.url}" target="_blank" id="tag">
+              {$post.tag.name}
+            </a>
             {/loop:post.tags}
           </div>
           {/post.tag}
@@ -119,7 +155,7 @@
               {#sys:notes.block_border_color|value:"#DDD"}
               {#sys:notes.operation_link_color|value:"#666"}
               {#sys:notes.enable_border_radius|value:"true"}
-              {#sys:notes.width|value:"650"}
+              {#sys:notes.width|value:"100%"}
               {$post.notes}
             </li>
             {/view.post}
@@ -147,12 +183,11 @@
     </div>
   </div>
 
-  <div data-role="footer" data-position="fixed">
+  <div data-role="footer" data-position="fixed" class="ui-bar-b ui-footer ui-footer-fixed fade ui-fixed-overlay">
     {?view.post}
-    <div data-role="navbar">
-      <ul>
-        <li><a href="#fowardOptions" data-icon="plus" data-rel="dialog" data-transition="slideup" class="ui-btn-active">分享</a></li>
-		    <li><a href="#" data-icon="minus">删除</a></li>
+    <div data-role="navbar" class="ui-navbar" role="navigation">
+      <ul class="ui-grid-b">
+        <li class="ui-block-a"><a href="#fowardOptions" data-icon="plus" data-rel="dialog" data-transition="slideup" class="ui-btn-active">分享</a></li>
 		    <li><a href="#" data-icon="star">关注</a></li>
 		    <li><a href="#" data-icon="home">主页</a></li>
       </ul>
