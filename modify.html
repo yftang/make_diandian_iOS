@@ -9,10 +9,10 @@
 	<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
 	<script type="text/javascript">
 	  var click_to_share = function (event) {
-	    var forward_to = event.target.getAttribute("id");
+	    var share_to = event.target.getAttribute("id");
 	    var post_id = $("#content-body").attr("class");
-	    if (forward_to != "cancel") {
-  	    window.open('http://www.diandian.com/share/goto/' + forward_to + '/' + post_id);
+	    if (share_to != "cancel") {
+  	    window.open('http://www.diandian.com/share/goto/' + share_to + '/' + post_id);
   	  }
 		  $("[data-role='dialog']").dialog("close");
 	  };
@@ -183,21 +183,23 @@
     </div>
   </div>
 
+  <!--
   <div data-role="footer" data-position="fixed" class="ui-bar-b ui-footer ui-footer-fixed fade ui-fixed-overlay">
     {?view.post}
     <div data-role="navbar" class="ui-navbar" role="navigation">
       <ul class="ui-grid-b">
-        <li class="ui-block-a"><a href="#fowardOptions" data-icon="plus" data-rel="dialog" data-transition="slideup" class="ui-btn-active">分享</a></li>
-		    <li><a href="#" data-icon="star">关注</a></li>
-		    <li><a href="#" data-icon="home">主页</a></li>
+        <li class="ui-block-a"><a href="#shareOptions" data-icon="plus" data-rel="dialog" data-transition="slideup" class="ui-btn-active">分享</a></li>
+		    <li><a href="#" data-icon="star">转载</a></li>
+		    <li><a href="{$global.url}" data-icon="home">{$global.name}的主页</a></li>
       </ul>
     </div>
     {/view.post}
   </div>
+  -->
 </div>
 
 <!-- 文章转载页面 -->
-<div data-role="page" id="fowardOptions">
+<div data-role="page" id="shareOptions">
 	<div data-role="content">
   	<button id="sina_weibo" data-theme="a">分享到新浪微博</button>
   	<button id="tencent_weibo" data-theme="a">分享到腾讯微博</button>
