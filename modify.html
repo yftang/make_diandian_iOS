@@ -36,6 +36,9 @@
 	  #tag {
 	    padding: 0px 5px 0px 5px;
 	  }
+	  #content-below-link {
+	    text-align: center;
+	  }
 	  #footer {
 	    text-align: center;
 	  }
@@ -64,10 +67,8 @@
 <!-- 文章浏览页面，暂时的主界面 -->
 <div data-role="page">
   <!-- 博客头部信息 -->
-  <div data-role="header" class="ui-bar-header" role="banner">
-    <a href="{$global.url}" cdata-icon="home">
-      {$global.name}
-    </a>
+  <div data-role="header">
+    <h1>{$global.name}</h1>
   </div>
 
   <!-- 文章内容部分 -->
@@ -132,16 +133,25 @@
             {?post.reblog}
             <a target="_blank" href="{$post.reblog.blog_url}" class="reblog-from">转载自 {$post.reblog.blog_name}</a>
             {/post.reblog}
-            {?view.list}
-            <a href="{$post.url}" class="content-below-link">全文</a>
-            {/view.list}
           </div>
         </div>
 
         <!-- 文章浏览页面的正文 -->
         <div id="content-body" class="{$post.id}">
-        	<!--如果是文字类型-->
+          {?view.post}
+        	  <!--如果是文字类型-->
             {?post.text}<div class="rich-content">{$text.content}</div>{/post.text}
+          {/view.post}
+          {?view.list}
+            <!--如果是文字类型-->
+            {?post.text}
+              <div class="rich-content">
+                {$text.summary}
+                <a href="{$post.url}" id="content-below-link">(全文)</a><br />
+                <hr />
+              </div>
+            {/post.text}
+          {/view.list}
         </div>
 
         <div id="content-tail">
@@ -172,14 +182,28 @@
       {?pagination}
         <div>
           {?pagination.prev}
-            <a href="{$pagination.prev.url}" class="prev-page">上一篇</a> |
+            <a href="{$pagination.prev.url}" class="prev-page">上一篇</a>
           {/pagination.prev}
+          &nbsp&nbsp&nbsp
           {?pagination.next}
             <a href="{$pagination.next.url}" class="next-page">下一篇</a>
           {/pagination.next}
         </div>
       {/pagination}
       {/view.post}
+      {?view.list}
+      {?pagination}
+        <div>
+          {?pagination.prev}
+            <a href="{$pagination.prev.url}" class="prev-page">上一页</a>
+          {/pagination.prev}
+          &nbsp&nbsp&nbsp
+          {?pagination.next}
+            <a href="{$pagination.next.url}" class="next-page">下一页</a>
+          {/pagination.next}
+        </div>
+      {/pagination}
+      {/view.list}
     </div>
   </div>
 
